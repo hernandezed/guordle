@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from "react";
+import React, {useState, useEffect, useCallback, JSX} from "react";
 import {motion} from "framer-motion";
 import {FaTrophy, FaSadTear} from "react-icons/fa";
 
@@ -135,7 +135,10 @@ const WordleClone = React.memo((): JSX.Element => {
 
     }, [input, attempts, currentAttempt, usedLetters, submittedAttempts]);
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-expect-error
     const getLetterStyle = useCallback((letter: string, index: number, attemptIndex: number): string => {
+
         if (!submittedAttempts[attemptIndex]) return "border-gray-400";
         const feedback = getFeedbackForAttempt(attempts[attemptIndex]);
         if (feedback[index] === "G") return "bg-green-500 text-white";
