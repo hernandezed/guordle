@@ -198,9 +198,18 @@ const WordleClone = React.memo((): JSX.Element => {
     }, [attempts, currentAttempt, submittedAttempts, hasWon, hasLost, usedLetters, time]);
 
     useEffect(() => {
+        console.log("Efecto ejecutado");
         if (hasWon || hasLost) return;
-        const timer = setInterval(() => setTime((prevTime) => prevTime + 1), 1000);
-        return () => clearInterval(timer);
+
+        const timer = setInterval(() => {
+            console.log("Intervalo ejecutado");
+            setTime((prevTime) => prevTime + 1);
+        }, 1000);
+
+        return () => {
+            console.log("Intervalo limpiado");
+            clearInterval(timer);
+        };
     }, [hasWon, hasLost]);
 
     const resetGame = () => {
