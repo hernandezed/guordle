@@ -17,7 +17,6 @@ const WordleClone = React.memo((): JSX.Element => {
     const [hasLost, setHasLost] = useState<boolean>(() => JSON.parse(localStorage.getItem("hasLost") || "false"));
     const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
     const [usedLetters, setUsedLetters] = useState<{ [key: string]: string }>(() => JSON.parse(localStorage.getItem("usedLetters") || "{}"));
-    const [time, setTime] = useState<number>(() => JSON.parse(localStorage.getItem("time") || "0"));
 
     useEffect(() => {
         const handleKeyPress = (e: KeyboardEvent): void => {
@@ -38,12 +37,6 @@ const WordleClone = React.memo((): JSX.Element => {
         return () => window.removeEventListener("keydown", handleKeyPress);
     }, [input, currentAttempt, attempts, submittedAttempts, hasWon, hasLost]);
 
-
-    useEffect(() => {
-        if (hasWon || hasLost) return;
-        const timer = setInterval(() => setTime((prevTime) => prevTime + 1), 1000);
-        return () => clearInterval(timer);
-    }, [hasWon, hasLost]);
 
     const handleLetterClick = useCallback((letter: string) => {
         if (input.length < WORD_LENGTH) {
@@ -194,23 +187,8 @@ const WordleClone = React.memo((): JSX.Element => {
         localStorage.setItem("hasWon", JSON.stringify(hasWon));
         localStorage.setItem("hasLost", JSON.stringify(hasLost));
         localStorage.setItem("usedLetters", JSON.stringify(usedLetters));
-        localStorage.setItem("time", JSON.stringify(time));
-    }, [attempts, currentAttempt, submittedAttempts, hasWon, hasLost, usedLetters, time]);
+    }, [attempts, currentAttempt, submittedAttempts, hasWon, hasLost, usedLetters]);
 
-    useEffect(() => {
-        console.log("Efecto ejecutado");
-        if (hasWon || hasLost) return;
-
-        const timer = setInterval(() => {
-            console.log("Intervalo ejecutado");
-            setTime((prevTime) => prevTime + 1);
-        }, 1000);
-
-        return () => {
-            console.log("Intervalo limpiado");
-            clearInterval(timer);
-        };
-    }, [hasWon, hasLost]);
 
     const resetGame = () => {
         setAttempts(Array(MAX_ATTEMPTS).fill(""));
@@ -221,7 +199,6 @@ const WordleClone = React.memo((): JSX.Element => {
         setHasWon(false);
         setHasLost(false);
         setUsedLetters({});
-        setTime(0);
         localStorage.clear();
     };
 
@@ -237,7 +214,6 @@ const WordleClone = React.memo((): JSX.Element => {
                 {isDarkMode ? "🌙" : "☀️"}
             </button>
             <h1 className="text-3xl font-bold mb-6">Guordle</h1>
-            <div className="text-xl mb-4">Time: {Math.floor(time / 60)}:{String(time % 60).padStart(2, '0')}</div>
             <div className="flex flex-col items-center space-y-2 w-full max-w-md">
                 {attempts.map((word, attemptIndex) => (
                     <motion.div
